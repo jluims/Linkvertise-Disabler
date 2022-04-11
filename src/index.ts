@@ -1,6 +1,7 @@
 import express from 'express';
 import https from 'https';
 import fs from 'fs';
+import path from 'path';
 
 const app = express();
 
@@ -10,26 +11,7 @@ app.use((req, res) => {
 		return;
 	}
 
-	// I don't have the willpower to bypass linkvertise myself
-	// so I may as well use an api!
-	res.send(`
-		<h1>Bypassing...</h1>
-		<script>
-		fetch('https://api.bypass.vip/', {
-				method: 'POST',
-				headers: {
-				'content-type': 'application/x-www-form-urlencoded;charset=UTF-8',
-				},
-				body: 'url=${'https://linkvertise.com' + req.path}'
-				}).then(res => {res.json().then(json => {
-					if (json.destination == null) {
-						alert('Failed to bypass link');
-						return;
-					}
-					location.href = json.destination;
-				})});
-		</script>
-		`);
+	res.sendFile(path.resolve('web/bypassing.html'))
 });
 
 https

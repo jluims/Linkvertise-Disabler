@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Novertise</title>
+	</head>
+	<body>
+		<h1>Bypassing...</h1>
+
+		<script>
+			/**
+			 *
+			 * @param {string} str
+			 */
+			async function bypass(str) {
+				if (str.includes('dynamic')) {
+					if (str.includes('&o=sharing')) {
+						var endStr = str.replace('%3D', '');
+						var val = endStr
+							.split('dynamic?r=')
+							.pop()
+							.split('&o=sharing')[0];
+
+						return atob(val);
+					} else {
+						let offset = str.includes('dynamic/?r=') ? 11 : 10;
+						let data = str.substring(
+							str.indexOf('dynamic/?r=') + offset
+						);
+
+						return atob(data);
+					}
+				} else {
+					const res = await fetch(
+						'https://bypass.bot.nu/bypass2?url=' + str
+					);
+					const json = await res.json();
+
+					if (json.success) {
+						return json.destination;
+					} else {
+						throw new Error('Failed to bypass');
+					}
+				}
+			}
+
+			(async () => {
+				try {
+					location.href = await bypass(location.href);
+				} catch {
+					alert('Failed to bypass');
+				}
+			})();
+		</script>
+	</body>
+</html>
